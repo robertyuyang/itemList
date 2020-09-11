@@ -1,6 +1,6 @@
 # itemlist
 
-A new Flutter project.
+Flutter travel item check list application.
 
 ## Getting Started
 
