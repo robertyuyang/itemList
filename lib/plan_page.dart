@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'plan_bloc.dart';
 
 
@@ -17,7 +18,7 @@ class PlanPageState extends State<PlanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:Text('test')),
+      appBar: AppBar(title:Text(BlocProvider.of<RBPlanBloc>(context).name)),
     );
   }
 

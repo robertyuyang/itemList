@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:itemlist/plan_bloc.dart';
+import 'package:itemlist/plan_page.dart';
 import 'plan_list_bloc.dart';
 
 class ItemListMainPage extends StatefulWidget {
@@ -81,7 +82,14 @@ class ItemListMainPageState extends State<ItemListMainPage> {
                   return GestureDetector(
                     child: itemBody,
                     onTap: () {
-                      Navigator.of(context).pushNamed('/plan_page');
+                      Navigator.push(
+                        context, 
+                      MaterialPageRoute(builder: (context) {
+                        return  BlocProvider(
+                          create: (context) => planBloc,
+                          child: PlanPage());
+                      },));
+                      //Navigator.of(context).pushNamed('/plan_page', arguments:planBloc);
                     },
                   );
                 },
