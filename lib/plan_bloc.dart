@@ -15,6 +15,8 @@ class RBPlanBloc extends Bloc<RBPlanEvent, RBPlanState>{
   
   String get name => _plan.name;
   String get desc => _plan.desc;
+  int get itemsCount => _plan.itemsCount;
+  String get checkedPercentString => _plan.itemsCount == 0 ? "0%" : (_plan.checkedItemsCount * 100 / _plan.itemsCount ) .toString() + "%";
 
   RBPlanBloc(this._plan); 
   @override

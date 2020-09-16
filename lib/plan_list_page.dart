@@ -31,38 +31,64 @@ class ItemListMainPageState extends State<ItemListMainPage> {
             print(state.toString());
             if (state is RBPlanListChangedState) {
               return new ListView.separated(
-                  itemCount: _planListBloc.plansCount,
-                  itemBuilder: (context, i) {
-                    RBPlanBloc planBloc = _planListBloc.planBlocOfIndex(i);
-                    planBloc.close();
-                    return Container(
-                        color: Colors.white12,
-                        //decoration: BoxDecoration(color: Colors.grey),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Image.asset(
-                                  'assets/images/trip.jpg',
-                                  width: 100,
-                                  height: 70,
-                                ),
-                                Padding(
+                itemCount: _planListBloc.plansCount,
+                itemBuilder: (context, i) {
+                  RBPlanBloc planBloc = _planListBloc.planBlocOfIndex(i);
+                  planBloc.close();
+                  Widget itemBody = Container(
+                      color: Colors.white12,
+                      //decoration: BoxDecoration(color: Colors.grey),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Image.asset(
+                                'assets/images/trip.jpg',
+                                width: 100,
+                                height: 70,
+                              ),
+                              Padding(
                                   padding: EdgeInsets.only(left: 20),
-                                  child: Text(planBloc.name,
-                                      style: TextStyle(
-                                          color: Colors.blueGrey,
-                                          fontSize: 16.0)),
-                                )
-                              ],
-                            ),
-                          ],
-                        ));
-                  }, separatorBuilder: (BuildContext context, int index) {
-                    return Divider(color: Colors.grey);
-                    },);
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(planBloc.name,
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                              color: Colors.blueGrey,
+                                              fontSize: 18.0)),
+                                      Text(
+                                        '${planBloc.itemsCount.toString()} items',
+                                        style: TextStyle(
+                                            color: Colors.blueGrey,
+                                            fontSize: 14.0),
+                                        textAlign: TextAlign.left,
+                                      )
+                                    ],
+                                  )),
+                              Expanded(child: SizedBox()),
+                              Padding(
+                                padding: EdgeInsets.only(right: 20),
+                                child: Text(planBloc.checkedPercentString),
+                              )
+                            ],
+                          ),
+                        ],
+                      ));
+                  return GestureDetector(
+                    child: itemBody,
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/plan_page');
+                    },
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return Divider(color: Colors.grey);
+                },
+              );
             } else if (state is RBPlanListEmptyState) {
               return Center(child: Text('no plans!'));
             }
