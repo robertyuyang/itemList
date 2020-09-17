@@ -14,6 +14,8 @@ class ItemListMainPageState extends State<ItemListMainPage> {
   @override
   void initState() {
     _planListBloc.add(RBPlanListLoadEvent());
+    //WidgetsBinding.instance.addObserver(
+    //);
   }
 
   @override
@@ -35,61 +37,68 @@ class ItemListMainPageState extends State<ItemListMainPage> {
                 itemCount: _planListBloc.plansCount,
                 itemBuilder: (context, i) {
                   RBPlanBloc planBloc = _planListBloc.planBlocOfIndex(i);
-                  planBloc.close();
-                  Widget itemBody = Container(
-                      color: Colors.white12,
-                      //decoration: BoxDecoration(color: Colors.grey),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Image.asset(
-                                'assets/images/trip.jpg',
-                                width: 100,
-                                height: 70,
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(left: 20),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(planBloc.name,
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              color: Colors.blueGrey,
-                                              fontSize: 18.0)),
-                                      Text(
-                                        '${planBloc.itemsCount.toString()} items',
-                                        style: TextStyle(
-                                            color: Colors.blueGrey,
-                                            fontSize: 14.0),
-                                        textAlign: TextAlign.left,
-                                      )
-                                    ],
-                                  )),
-                              Expanded(child: SizedBox()),
-                              Padding(
-                                padding: EdgeInsets.only(right: 20),
-                                child: Text(planBloc.checkedPercentString),
-                              )
-                            ],
-                          ),
-                        ],
-                      ));
+                  //planBloc.close();
+
                   return GestureDetector(
-                    child: itemBody,
+                    child: BlocBuilder<RBPlanBloc, RBPlanState>(
+                      bloc: planBloc,
+                      builder: (context, state) {
+                        return Container(
+                            color: Colors.white12,
+                            //decoration: BoxDecoration(color: Colors.grey),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 10),
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Image.asset(
+                                      'assets/images/trip.jpg',
+                                      width: 100,
+                                      height: 70,
+                                    ),
+                                    Padding(
+                                        padding: EdgeInsets.only(left: 20),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(planBloc.name,
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    color: Colors.blueGrey,
+                                                    fontSize: 18.0)),
+                                            Text(
+                                              '${planBloc.itemsCount.toString()} items',
+                                              style: TextStyle(
+                                                  color: Colors.blueGrey,
+                                                  fontSize: 14.0),
+                                              textAlign: TextAlign.left,
+                                            )
+                                          ],
+                                        )),
+                                    Expanded(child: SizedBox()),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: 20),
+                                      child:
+                                          Text(planBloc.checkedPercentString),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ));
+                      },
+                    ),
                     onTap: () {
-                      Navigator.push(
+                      /*Navigator.push(
                         context, 
                       MaterialPageRoute(builder: (context) {
                         return  BlocProvider(
                           create: (context) => planBloc,
                           child: PlanPage());
-                      },));
-                      //Navigator.of(context).pushNamed('/plan_page', arguments:planBloc);
+                      },));*/
+                      Navigator.of(context)
+                          .pushNamed('/plan_page', arguments: planBloc);
                     },
                   );
                 },

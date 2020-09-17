@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:rxdart/rxdart.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:itemlist/plan.dart';
@@ -30,23 +31,30 @@ class RBPlanListAddPlanEvent implements RBPlanListEvent {
 }
 
 class RBPlanListBloc extends Bloc<RBPlanListEvent, RBPlanListState> {
+  
   List<RBPlanBloc> planBlocList = <RBPlanBloc>[];
+  BehaviorSubject<bool> savePlanListSubject = BehaviorSubject<bool>();
 
-  RBPlanListBloc() {}
+  RBPlanListBloc() {
+
+    this.savePlanListSubject.listen((event) { 
+      this.add(RBPlanListSaveEvent());
+    });
+  }
 
   Stream<RBPlanListState> _createTestPlanList() async*{
-    RBPlan plan1 = RBPlan(name: 'HongKong', desc: 'Trip to HongKong');
+    RBPlanBloc plan1 = RBPlanBloc(RBPlan(name: 'HongKong', desc: 'Trip to HongKong'));
     plan1.addItem(RBItem(name: 'CreditCard', required: true));
     plan1.addItem(RBItem(name: 'Glassess'));
     plan1.addItem(RBItem(name: 'Hat'));
     plan1.addItem(RBItem(name: 'Phone', required: true));
-    RBPlan plan2 = RBPlan(name: 'Tailand', desc: 'Trip to Tailand');
+    RBPlanBloc plan2 = RBPlanBloc(RBPlan(name: 'Tailand', desc: 'Trip to Tailand'));
     plan2.addItem(RBItem(name: 'CreditCard'));
     plan2.addItem(RBItem(name: 'Glassess'));
     plan2.addItem(RBItem(name: 'Hat'));
 
-    planBlocList.add(RBPlanBloc(plan1));
-    planBlocList.add(RBPlanBloc(plan2));
+    planBlocList.add(plan1);
+    planBlocList.add(plan2);
 
     yield RBPlanListChangedState();
   }
@@ -66,10 +74,17 @@ class RBPlanListBloc extends Bloc<RBPlanListEvent, RBPlanListState> {
     } else if (event is RBPlanListSaveEvent) {
       _save();
     } else if (event is RBPlanListLoadEvent) {
-      print('before load');
       yield* _load();
-      print('after load');
     }
+  }
+
+  @override
+  void onTransition(Transition<RBPlanListEvent, RBPlanListState> transition) {
+    if (transition.nextState is RBPlanListChangedState){
+      for(RBPlanBloc bloc in this.planBlocList){
+        bloc.savePlanListSink =  savePlanListSubject.sink;
+      }
+    } 
   }
 
   int get plansCount => this.planBlocList.length;
