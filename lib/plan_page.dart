@@ -3,6 +3,7 @@ import 'package:tuple/tuple.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:itemlist/plan.dart';
 import 'plan_bloc.dart';
+import 'plan_edit_dialog.dart';
 
 class PlanPage extends StatefulWidget {
   @override
@@ -21,7 +22,21 @@ class PlanPageState extends State<PlanPage> {
     return BlocProvider.value(
         value: planBloc,
         child: Scaffold(
-            appBar: AppBar(title: Text(planBloc.name)),
+            appBar: AppBar(
+              title: Text(planBloc.name),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.add), 
+                  onPressed: (){
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) => BlocProvider.value(value: planBloc, child: RBPlanEditDialog()),
+                      );
+
+                })
+              ],
+              ),
             body:
                 BlocBuilder<RBPlanBloc, RBPlanState>(builder: (context, state) {
               RBPlanBloc planBloc = BlocProvider.of<RBPlanBloc>(context);
