@@ -3,7 +3,7 @@ import 'package:tuple/tuple.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:itemlist/plan.dart';
 import 'plan_bloc.dart';
-import 'plan_edit_dialog.dart';
+import 'item_edit_dialog.dart';
 
 class PlanPage extends StatefulWidget {
   @override
@@ -13,6 +13,12 @@ class PlanPage extends StatefulWidget {
 class PlanPageState extends State<PlanPage> {
   @override
   void initState() {}
+  
+  void addItemCallBack(String name, bool required){
+    //RBPlanBloc planBloc = BlocProvider.of<RBPlanBloc>(context);
+    //planBloc.addItem(RBItem(name: name, required: required));
+    print(name);
+  }
   @override
   Widget build(BuildContext context) {
     final RBPlanBloc planBloc = ModalRoute.of(context).settings.arguments;
@@ -31,8 +37,14 @@ class PlanPageState extends State<PlanPage> {
                     showDialog(
                       context: context,
                       barrierDismissible: false,
-                      builder: (context) => BlocProvider.value(value: planBloc, child: RBPlanEditDialog()),
-                      );
+                      builder: (context) {
+                        RBItemEditDialog dialog =  RBItemEditDialog();
+                        dialog.callback = (String name, bool required){
+                          planBloc.addItem(RBItem(name: name, required: required));
+                        };
+                        //dialog.callback = this.addItemCallBack;
+                        return dialog;
+                      });
 
                 })
               ],

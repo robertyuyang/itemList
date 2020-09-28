@@ -18,6 +18,10 @@ class RBPlanCheckEvent extends RBPlanEvent {
   RBPlanCheckEvent({this.index, this.checked}) {}
 }
 
+class RBPlanAddedEvent extends RBPlanEvent {
+
+}
+
 class RBPlanBloc extends Bloc<RBPlanEvent, RBPlanState> {
   RBPlan _plan = RBPlan();
   StreamSink<bool> savePlanListSink;
@@ -40,6 +44,9 @@ class RBPlanBloc extends Bloc<RBPlanEvent, RBPlanState> {
     if (event is RBPlanCheckEvent) {
       yield* this.checkAtIndex(event.index, event.checked);
     }
+    else if (event is RBPlanAddedEvent){
+      yield RBPlanChangedState();
+    }
   }
 
   int get itemsCount => _plan.itemList.length;
@@ -61,14 +68,17 @@ class RBPlanBloc extends Bloc<RBPlanEvent, RBPlanState> {
       : null;
 
   void addItem(RBItem item) {
-    _plan.itemList.add(item);
-    _plan.checkList.add(false);
+    _plan.itemList.insert(0, item);
+    _plan.checkList.insert(0, false);
     this.savePlanListSink.add(true);
+    this.add(RBPlanAddedEvent());
   }
 
   void removeAtIndex(int index) {
     _plan.itemList.removeAt(index);
     _plan.checkList.removeAt(index);
+    this.savePlanListSink.add(true);
+    this.add(RBPlanAddedEvent());
   }
 
   Stream<RBPlanState> checkAtIndex(int index, bool checked) async* {
