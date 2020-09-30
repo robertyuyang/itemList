@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:itemlist/plan.dart';
-import 'plan_bloc.dart';
 
-class RBPlanEditDialog extends StatelessWidget {
-  RBPlanBloc _planBloc;
-  RBPlanEditDialog(RBPlanBloc planBloc) {
-    if (planBloc != null) {
-      _planBloc = planBloc;
-    } else {
-      _planBloc = RBPlanBloc(RBPlan(name: '物品名称', desc: '无描述'));
-    }
+class RBPlanEditDialog extends StatefulWidget {
+  String name;
+  String desc;
+  bool required = true;
+  Function(String, String) callback = null;
+  RBPlanEditDialog({this.name = '计划名称',this.desc = '计划描述'}) {
   }
-  //@override
-  //State<StatefulWidget> createState() => RBPlanEditState();
 
+  @override
+  State<StatefulWidget> createState()  => RBPlanEditState();
+}
+
+class RBPlanEditState extends State<RBPlanEditDialog> {
+  TextEditingController _nameController;
+  TextEditingController _descController;
+  @override
+  void initState(){
+    this._nameController = TextEditingController(text: widget.name);
+    this._descController = TextEditingController(text: widget.desc);
+  }
   @override
   Widget build(BuildContext context) {
     return Center(
         child: Material(
-            child: BlocBuilder(
-      bloc: _planBloc,
-      builder: (context, state) => Container(
+      child: Container(
         height: 250,
         width: 300,
         child: Column(
@@ -34,15 +38,12 @@ class RBPlanEditDialog extends StatelessWidget {
                       Expanded(child: SizedBox()),
                       Container(
                           padding: EdgeInsets.only(top: 15),
-                          child: Text('添加物品')),
+                          child: Text('添加计划')),
                       Expanded(child: SizedBox()),
                     ]),
                 Container(
                   alignment: Alignment.centerRight,
-                  //padding: EdgeInsets.only(right: 20),
                   child:
-
-                      //Center(child:Text('添加物品')),
                       IconButton(
                           icon: Icon(Icons.close),
                           onPressed: () {
@@ -52,32 +53,25 @@ class RBPlanEditDialog extends StatelessWidget {
               ],
             ),
             Container(
-              child: TextField(),
+              child: TextField(controller: _nameController),
               padding: EdgeInsets.only(left: 15, right: 15),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Center(child: Checkbox(value: false, onChanged: (checked) {})),
-                Text('必需品')
-              ],
+            Container(
+              child: TextField(controller: _descController),
+              padding: EdgeInsets.only(left: 15, right: 15),
             ),
             Container(
-              child: RaisedButton(child: Text('添加'), onPressed: () {}),
-              padding: EdgeInsets.only(bottom: 15),
+              child: RaisedButton(child: Text('添加'), onPressed: () {
+                if(widget.callback != null){
+                  widget.callback(_nameController.text, _descController.text);
+                  Navigator.of(context).pop();
+                }
+              }),
+              padding: EdgeInsets.only(bottom: 15, top:15),
             ),
           ],
         ),
       ),
-    )));
+    ));
   }
 }
-/*
-class RBPlanEditState extends State<RBPlanEditDialog>{
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
-
-}*/

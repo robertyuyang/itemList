@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:itemlist/plan_bloc.dart';
 import 'package:itemlist/plan_page.dart';
 import 'plan_list_bloc.dart';
+import 'plan_edit_dialog.dart';
 
 class ItemListMainPage extends StatefulWidget {
   @override
@@ -27,7 +28,26 @@ class ItemListMainPageState extends State<ItemListMainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(title: new Text('Item List Main Page')),
+      appBar: new AppBar(
+        title: new Text('所有计划'),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.add), 
+                  onPressed: (){
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) {
+                        RBPlanEditDialog dialog =  RBPlanEditDialog();
+                        dialog.callback = (String name, String desc){
+                          _planListBloc.add(RBPlanListAddPlanEvent(name: name, desc: desc));
+                        };
+                        //dialog.callback = this.addItemCallBack;
+                        return dialog;
+                      });
+
+                })
+              ],),
       body: BlocBuilder<RBPlanListBloc, RBPlanListState>(
           bloc: _planListBloc,
           builder: (context, state) {

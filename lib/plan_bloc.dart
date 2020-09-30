@@ -33,6 +33,24 @@ class RBPlanBloc extends Bloc<RBPlanEvent, RBPlanState> {
       : (checkedItemsCount.toDouble() / itemsCount.toDouble());
   String get checkedPercentString =>
       (checkedPercent * 100).toStringAsFixed(1) + "%";
+  
+  double get requiredCheckedPercent {
+    double requiredCheckedItemsCount = 0.0;
+    double requiredItemsCount = 0.0;
+    int itemCount = this._plan.itemList.length;
+    for(int i  = 0; i < itemCount; i++){
+      if(_plan.itemList[i].required){
+        requiredItemsCount++;
+        if(_plan.checkList[i]){
+          requiredCheckedItemsCount++;
+        }
+      }
+    }
+    
+    return requiredItemsCount == 0 ? 0 :  requiredCheckedItemsCount / requiredItemsCount; 
+  }
+
+  String get requiredCheckedPercentString => (requiredCheckedPercent * 100).toStringAsFixed(1) + '%';
 
   RBPlanBloc(this._plan);
 

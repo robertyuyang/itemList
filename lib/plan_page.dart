@@ -55,22 +55,44 @@ class PlanPageState extends State<PlanPage> {
               return Column(children: <Widget>[
                 Container(
                   padding: EdgeInsets.only(top: 20),
-                  height: 70.0,
+                  height: 160.0,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children:<Widget>[
-                    Text(planBloc.desc),
+                    Padding(padding:EdgeInsets.only(bottom:30),child: Text(planBloc.desc)),
                     Row(children: <Widget>[
+                      Container(width: 100, padding: EdgeInsets.only(left:10),child: Text('必备物品', style: TextStyle(fontSize: 18),),),
+                      Expanded(child: 
+                      Container(
+                        width: 175,
+                        height: 30,
+                        padding: EdgeInsets.only(left:15.0, top:10.0, bottom: 10.0, right: 10), 
+                        child:LinearProgressIndicator(value: planBloc.requiredCheckedPercent,
+                        backgroundColor: Colors.lightGreen.shade100 , valueColor: AlwaysStoppedAnimation(Colors.lightGreen.shade500))),
+                      ),
+                      //Expanded(child: SizedBox()),
+                      Container(
+                        width: 90,
+                        height: 30,
+                        padding: EdgeInsets.only(right:25),
+                        child: Center(child:Text(planBloc.requiredCheckedPercentString, style: (TextStyle(fontSize:18)),)),
+                        )
+                    ]),
+                    Row(children: <Widget>[
+                      Container(width: 100,padding: EdgeInsets.only(left:10),child: Text('全部物品', style: TextStyle(fontSize: 12),),),
+                      Expanded(child: 
                       Container(
                         width: 275,
                         height: 30,
-                        padding: EdgeInsets.only(left:15.0, top:10.0, bottom: 10.0), 
-                        child:LinearProgressIndicator(value: planBloc.checkedPercent)),
-                      Expanded(child: SizedBox()),
+                        padding: EdgeInsets.only(left:15.0, top:10.0, bottom: 10.0, right: 10), 
+                        child:LinearProgressIndicator(value: planBloc.checkedPercent, 
+                        backgroundColor: Colors.lightBlue.shade50 , valueColor: AlwaysStoppedAnimation(Colors.lightBlue.shade200),)),
+                      ),
                       Container(
                         height: 30,
+                        width: 90,
                         padding: EdgeInsets.only(right:25),
-                        child: Center(child:Text(planBloc.checkedPercentString)),
+                        child: Center(child:Text(planBloc.checkedPercentString, style: TextStyle(fontSize: 12))),
                         )
                     ])
                   ]),
@@ -92,12 +114,15 @@ class PlanPageState extends State<PlanPage> {
                               child: Row(
                                 children: <Widget>[
                                   Padding(
-                                      padding: EdgeInsets.only(left: 30),
+                                      padding: EdgeInsets.only(left: 30,right: 7),
                                       child: Text(
                                         itemMap.item1.name,
                                         style: TextStyle(
                                             color: Colors.blue, fontSize: 18),
                                       )),
+                                  Container(
+                                    decoration: BoxDecoration(borderRadius:BorderRadius.circular(1), border: Border.all(color:Colors.blue, width: .5)),
+                                    child:Text(itemMap.item1.required ? '必备品':'', style: TextStyle(fontSize: 10),)),
                                   Expanded(child: SizedBox()),
                                   Padding(
                                       padding: EdgeInsets.only(right: 10),
