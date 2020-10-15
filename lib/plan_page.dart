@@ -102,8 +102,21 @@ class PlanPageState extends State<PlanPage> {
                     child: ListView.separated(
                         itemCount:
                             BlocProvider.of<RBPlanBloc>(context).itemsCount,
-                        separatorBuilder: (context, index) =>
-                            Divider(color: Colors.black),
+                        separatorBuilder: (context, index) {
+
+                            if(index == 0){
+                              return Container(child:
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  height: 40,
+                                  color: Colors.blue.shade300,
+                                  padding: EdgeInsets.only(left:30), 
+                                  child:Text('section', style: TextStyle(color: Colors.white),))
+                               );
+                            }
+
+                            return Divider(color: Colors.black);
+                        },
                         itemBuilder: (context, i) {
                           Tuple2<RBItem, bool> itemMap =
                               BlocProvider.of<RBPlanBloc>(context)

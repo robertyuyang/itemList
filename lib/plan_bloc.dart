@@ -18,6 +18,7 @@ class RBPlanCheckEvent extends RBPlanEvent {
   RBPlanCheckEvent({this.index, this.checked}) {}
 }
 
+
 class RBPlanAddedEvent extends RBPlanEvent {
 
 }
@@ -54,6 +55,7 @@ class RBPlanBloc extends Bloc<RBPlanEvent, RBPlanState> {
 
   RBPlanBloc(this._plan);
 
+
   @override
   RBPlanState get initialState => RBPlanState();
 
@@ -85,17 +87,22 @@ class RBPlanBloc extends Bloc<RBPlanEvent, RBPlanState> {
       ? Tuple2(_plan.itemList[index], _plan.checkList[index])
       : null;
 
+  RBPlan get currentPlan => this._plan; 
   void addItem(RBItem item) {
     _plan.itemList.insert(0, item);
     _plan.checkList.insert(0, false);
-    this.savePlanListSink.add(true);
+    if(this.savePlanListSink != null){
+      this.savePlanListSink.add(true);
+    }
     this.add(RBPlanAddedEvent());
   }
 
   void removeAtIndex(int index) {
     _plan.itemList.removeAt(index);
     _plan.checkList.removeAt(index);
-    this.savePlanListSink.add(true);
+    if(this.savePlanListSink != null){
+      this.savePlanListSink.add(true);
+    }
     this.add(RBPlanAddedEvent());
   }
 
@@ -103,7 +110,9 @@ class RBPlanBloc extends Bloc<RBPlanEvent, RBPlanState> {
     print('$index $checked');
     if (index < _plan.checkList.length) {
       _plan.checkList[index] = checked;
-      this.savePlanListSink.add(true);
+      if(this.savePlanListSink != null){
+        this.savePlanListSink.add(true);
+      }
       yield RBPlanChangedState();
     }
   }

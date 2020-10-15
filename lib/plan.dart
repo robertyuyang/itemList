@@ -1,4 +1,5 @@
 
+import 'dart:collection';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
@@ -14,6 +15,12 @@ class RBItem {
 class RBCheckItem extends RBItem {
 
   }
+
+class RBSection {
+  RBSection(this.name);
+  String name = 'Defualt Section';
+  List<RBItem> itemsList;
+}
 class RBPlan {
 
   
@@ -21,17 +28,21 @@ class RBPlan {
   String desc = 'Defualt description';
   //List<Tuple2<RBItem, bool>> _itemTupleList =List<Tuple2<RBItem, bool>>();
   List<RBItem> itemList = <RBItem>[];
+
   List<bool> checkList = <bool>[];
   
 
   RBPlan({this.name, this.desc});
+  RBPlan.from(RBPlan sourcePlan, bool copyCheckList){
+    this.name = sourcePlan.name;
+    this.desc = sourcePlan.desc;
+    this.itemList = List.from(sourcePlan.itemList);
+    if(copyCheckList){
+      this.checkList = List.from(sourcePlan.checkList);
+    }
+  }
 
 
-
-  
-
-  
-  
   Map<String, dynamic> toJson(){
     return {
       'name': name,

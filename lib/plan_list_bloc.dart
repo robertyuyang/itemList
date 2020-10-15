@@ -30,6 +30,14 @@ class RBPlanListAddPlanEvent implements RBPlanListEvent {
   String desc;
 }
 
+  class RBPlanListCopyPlanEvent extends RBPlanListEvent {
+    int sourcePlanIndex;
+    bool copyCheckList;
+    String newPlanName;
+    String newDescriptionName;
+    RBPlanListCopyPlanEvent(this.sourcePlanIndex, {this.newPlanName, this.newDescriptionName, this.copyCheckList});
+  }
+
 class RBPlanListBloc extends Bloc<RBPlanListEvent, RBPlanListState> {
   
   List<RBPlanBloc> planBlocList = <RBPlanBloc>[];
@@ -59,6 +67,18 @@ class RBPlanListBloc extends Bloc<RBPlanListEvent, RBPlanListState> {
     yield RBPlanListChangedState();
   }
 
+  Stream<RBPlanListState> _copyPlan(RBPlanListCopyPlanEvent event) async* {
+    RBPlanBloc sourcePlanBloc = this.planBlocList[event.sourcePlanIndex];
+    RBPlan newPlan =  RBPlan.from(sourcePlanBloc.currentPlan, event.copyCheckList);
+    newPlan.name = event.newPlanName;
+    newPlan.desc = event.newDescriptionName;
+    this.planBlocList.add(RBPlanBloc(newPlan));
+    this.add(RBPlanListSaveEvent());
+    //RBPlanBloc newPlanBloc = sourcePlanBloc.
+
+    yield RBPlanListChangedState();
+  }
+
   @override
   RBPlanListState get initialState => RBPlanListEmptyState();
 
@@ -75,7 +95,10 @@ class RBPlanListBloc extends Bloc<RBPlanListEvent, RBPlanListState> {
       _save();
     } else if (event is RBPlanListLoadEvent) {
       yield* _load();
+    } else if (event is RBPlanListCopyPlanEvent){
+      yield* _copyPlan(event as RBPlanListCopyPlanEvent);
     }
+
   }
 
   @override
@@ -95,6 +118,8 @@ class RBPlanListBloc extends Bloc<RBPlanListEvent, RBPlanListState> {
     }
     return planBlocList[index];
   }
+
+
 
   Stream<RBPlanListState> _load() async* {
     bool isFirstLaunch = false;

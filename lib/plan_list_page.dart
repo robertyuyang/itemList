@@ -4,6 +4,7 @@ import 'package:itemlist/plan_bloc.dart';
 import 'package:itemlist/plan_page.dart';
 import 'plan_list_bloc.dart';
 import 'plan_edit_dialog.dart';
+import 'plan_copy_dialog.dart';
 
 class ItemListMainPage extends StatefulWidget {
   @override
@@ -30,24 +31,25 @@ class ItemListMainPageState extends State<ItemListMainPage> {
     return Scaffold(
       appBar: new AppBar(
         title: new Text('所有计划'),
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.add), 
-                  onPressed: (){
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) {
-                        RBPlanEditDialog dialog =  RBPlanEditDialog();
-                        dialog.callback = (String name, String desc){
-                          _planListBloc.add(RBPlanListAddPlanEvent(name: name, desc: desc));
-                        };
-                        //dialog.callback = this.addItemCallBack;
-                        return dialog;
-                      });
-
-                })
-              ],),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) {
+                      RBPlanEditDialog dialog = RBPlanEditDialog();
+                      dialog.callback = (String name, String desc) {
+                        _planListBloc.add(
+                            RBPlanListAddPlanEvent(name: name, desc: desc));
+                      };
+                      //dialog.callback = this.addItemCallBack;
+                      return dialog;
+                    });
+              })
+        ],
+      ),
       body: BlocBuilder<RBPlanListBloc, RBPlanListState>(
           bloc: _planListBloc,
           builder: (context, state) {
@@ -99,10 +101,22 @@ class ItemListMainPageState extends State<ItemListMainPage> {
                                         )),
                                     Expanded(child: SizedBox()),
                                     Padding(
-                                      padding: EdgeInsets.only(right: 20),
+                                      padding: EdgeInsets.only(right: 5),
                                       child:
                                           Text(planBloc.checkedPercentString),
-                                    )
+                                    ),
+                                    Padding(
+                                        padding: EdgeInsets.only(right: 0),
+                                        child: IconButton(
+                                          icon: Icon(Icons.content_copy),
+                                          onPressed: () {
+                                            showDialog(
+                                                context: context,
+                                                barrierDismissible: false,
+                                                builder: (context) => RBPlanCopySLDialog(this._planListBloc, i)
+                                                );
+                                          },
+                                        ))
                                   ],
                                 ),
                               ],
