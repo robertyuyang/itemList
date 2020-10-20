@@ -19,8 +19,10 @@ class RBPlanCheckEvent extends RBPlanEvent {
 }
 
 
-class RBPlanAddedEvent extends RBPlanEvent {
-
+class RBPlanChangedEvent extends RBPlanEvent{}
+class RBPlanAddCategoryEvent extends RBPlanEvent{
+  String name;
+  RBPlanAddCategoryEvent(this.name);
 }
 
 class RBPlanBloc extends Bloc<RBPlanEvent, RBPlanState> {
@@ -64,7 +66,7 @@ class RBPlanBloc extends Bloc<RBPlanEvent, RBPlanState> {
     if (event is RBPlanCheckEvent) {
       yield* this.checkAtIndex(event.index, event.checked);
     }
-    else if (event is RBPlanAddedEvent){
+    else if (event is RBPlanChangedEvent){
       yield RBPlanChangedState();
     }
   }
@@ -86,15 +88,36 @@ class RBPlanBloc extends Bloc<RBPlanEvent, RBPlanState> {
   Tuple2<RBItem, bool> itemAtIndex(int index) => index < _plan.itemList.length
       ? Tuple2(_plan.itemList[index], _plan.checkList[index])
       : null;
+  
+  String categoryNameAtItemIndex(int index){
+    int categoryIndex  = _plan.categoryStartList.indexOf(index);
+    if (categoryIndex  != -1) {
+      return _plan.categoryNameList[categoryIndex];
+    }
+    return null;
+
+  }
 
   RBPlan get currentPlan => this._plan; 
-  void addItem(RBItem item) {
-    _plan.itemList.insert(0, item);
-    _plan.checkList.insert(0, false);
+  void addItem(RBItem item, [int categoryIndex = 0]) {
+    if(categoryIndex >= _plan.categoryNameList.length){
+      return;
+    }
+
+    int categoryStart = _plan.categoryStartList[categoryIndex];
+    _plan.itemList.insert(categoryStart, item);
+    _plan.checkList.insert(categoryStart, false);
+    _plan.categoryItemCountList[categoryIndex]++;
     if(this.savePlanListSink != null){
       this.savePlanListSink.add(true);
     }
-    this.add(RBPlanAddedEvent());
+    this.add(RBPlanChangedEvent());
+  }
+
+  void addCategory(String name){
+    _plan.categoryNameList.insert(0, name);
+    _plan.categoryItemCountList.insert(0, 0);
+    this.add(RBPlanChangedEvent());
   }
 
   void removeAtIndex(int index) {
@@ -103,7 +126,7 @@ class RBPlanBloc extends Bloc<RBPlanEvent, RBPlanState> {
     if(this.savePlanListSink != null){
       this.savePlanListSink.add(true);
     }
-    this.add(RBPlanAddedEvent());
+    this.add(RBPlanChangedEvent());
   }
 
   Stream<RBPlanState> checkAtIndex(int index, bool checked) async* {

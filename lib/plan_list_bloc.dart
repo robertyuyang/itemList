@@ -52,10 +52,13 @@ class RBPlanListBloc extends Bloc<RBPlanListEvent, RBPlanListState> {
 
   Stream<RBPlanListState> _createTestPlanList() async*{
     RBPlanBloc plan1 = RBPlanBloc(RBPlan(name: 'HongKong', desc: 'Trip to HongKong'));
+    plan1.addCategory('电子产品');
+    plan1.addCategory('证件');
     plan1.addItem(RBItem(name: 'CreditCard', required: true));
     plan1.addItem(RBItem(name: 'Glassess'));
     plan1.addItem(RBItem(name: 'Hat'));
-    plan1.addItem(RBItem(name: 'Phone', required: true));
+    plan1.addItem(RBItem(name: 'iPhone', required: true), 1);
+    plan1.addItem(RBItem(name: 'Switch', required: true), 1);
     RBPlanBloc plan2 = RBPlanBloc(RBPlan(name: 'Tailand', desc: 'Trip to Tailand'));
     plan2.addItem(RBItem(name: 'CreditCard'));
     plan2.addItem(RBItem(name: 'Glassess'));
@@ -118,6 +121,7 @@ class RBPlanListBloc extends Bloc<RBPlanListEvent, RBPlanListState> {
     }
     return planBlocList[index];
   }
+
 
 
 

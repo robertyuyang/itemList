@@ -30,7 +30,18 @@ class RBPlan {
   List<RBItem> itemList = <RBItem>[];
 
   List<bool> checkList = <bool>[];
+  List<String> categoryNameList = <String>[];
+  List<int> categoryItemCountList = <int>[];
   
+  List<int> get categoryStartList {
+    List<int> startList = <int>[];
+    int lastStart = 0;
+    for(int count in this.categoryItemCountList){
+      startList.add(lastStart);
+      lastStart += count;
+    }
+    return startList;
+  }
 
   RBPlan({this.name, this.desc});
   RBPlan.from(RBPlan sourcePlan, bool copyCheckList){

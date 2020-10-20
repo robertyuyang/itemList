@@ -121,6 +121,8 @@ class PlanPageState extends State<PlanPage> {
                           Tuple2<RBItem, bool> itemMap =
                               BlocProvider.of<RBPlanBloc>(context)
                                   .itemAtIndex(i);
+                          String categoryName = BlocProvider.of<RBPlanBloc>(context).categoryNameAtItemIndex(i);
+                          print(categoryName);
                           if (itemMap != null && itemMap is Tuple2) {
                             return Container(
                               padding: EdgeInsets.all(5.0),
@@ -129,7 +131,7 @@ class PlanPageState extends State<PlanPage> {
                                   Padding(
                                       padding: EdgeInsets.only(left: 30,right: 7),
                                       child: Text(
-                                        itemMap.item1.name,
+                                        itemMap.item1.name + '  ' + (categoryName != null ? categoryName : ''),
                                         style: TextStyle(
                                             color: Colors.blue, fontSize: 18),
                                       )),
