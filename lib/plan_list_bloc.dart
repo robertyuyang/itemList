@@ -161,7 +161,7 @@ class RBPlanListBloc extends Bloc<RBPlanListEvent, RBPlanListState> {
     if(planListJsons is List){
       this.planBlocList.clear();
       planListJsons.forEach((element) {
-        this.planBlocList.add(RBPlanBloc(RBPlan().fromJson(element)));
+        this.planBlocList.add(RBPlanBloc(RBPlan.fromJson(element)));
       });
     }
   }

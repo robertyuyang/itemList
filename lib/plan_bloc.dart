@@ -89,14 +89,14 @@ class RBPlanBloc extends Bloc<RBPlanEvent, RBPlanState> {
       ? Tuple2(_plan.itemList[index], _plan.checkList[index])
       : null;
   
-  String categoryNameAtItemIndex(int index){
-    int categoryIndex  = _plan.categoryStartList.indexOf(index);
+  String categoryNameAtIndex(int categoryIndex){
     if (categoryIndex  != -1) {
       return _plan.categoryNameList[categoryIndex];
     }
     return null;
-
   }
+
+  int categoryIndexAtItemIndex(int index) => _plan.categoryStartList.indexOf(index);
 
   RBPlan get currentPlan => this._plan; 
   void addItem(RBItem item, [int categoryIndex = 0]) {
